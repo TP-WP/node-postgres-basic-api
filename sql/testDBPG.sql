@@ -1,17 +1,15 @@
+DROP DATABASE IF EXISTS testdb;
+
+CREATE DATABASE testdb;
+
+\c testdb;
+
+DROP TABLE IF EXISTS usuario;
 
 CREATE TABLE usuario
 (
-    id
-        SERIAL,
-    nombre VARCHAR
-    (20),
-    edad VARCHAR
-    (20),
-    rut VARCHAR
-    (10),
-    telefono INT,
-    direccion VARCHAR
-    (50),
-    PRIMARY KEY
-    (id)
+    id SERIAL,
+    email VARCHAR(50) UNIQUE,
+    contrasena VARCHAR(255),
+    PRIMARY KEY(id)
 )

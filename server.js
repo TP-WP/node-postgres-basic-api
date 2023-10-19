@@ -1,6 +1,7 @@
 const express = require("express");
 const cors = require("cors"); //para evitar problemas con la CORS policy
 const usuariosRouter = require("./JS/rutas/usuarios");
+const loginRouter = require("./JS/rutas/login");
 
 const PORT = process.env.PORT || 3050;
 
@@ -22,5 +23,6 @@ app.get("/", async (req, res) => {
 
 //ruta usuarios
 app.use("/usuarios", usuariosRouter);
+app.use("/login", loginRouter);
 
 app.listen(PORT, () => console.log(`servidor corriendo en puerto: ${PORT}`));
