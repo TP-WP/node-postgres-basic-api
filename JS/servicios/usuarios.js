@@ -12,7 +12,7 @@ const creaUsuario = async (usuario) => {
   });
 };
 
-const getSingle = async (email) => {
+const get_user = async (email) => {
   return new Promise(async (resolve, reject) => {
     try {
       const sql = `SELECT email, contrasena FROM usuario WHERE email='${email}'`;
@@ -24,4 +24,4 @@ const getSingle = async (email) => {
   });
 };
 
-module.exports = { creaUsuario, getSingle };
+module.exports = { creaUsuario, get_user };

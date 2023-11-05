@@ -1,8 +1,9 @@
 const express = require("express");
 const cors = require("cors"); //para evitar problemas con la CORS policy
+const cookieParser = require("cookie-parser");
 const usuariosRouter = require("./JS/rutas/usuarios");
 const loginRouter = require("./JS/rutas/login");
-
+const registroRouter = require("./JS/rutas/registro");
 const PORT = process.env.PORT || 3050;
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cookieParser());
 
 //rutas
 //por defecto
@@ -22,7 +24,8 @@ app.get("/", async (req, res) => {
 });
 
 //ruta usuarios
-app.use("/usuarios", usuariosRouter);
+app.use("/registro", registroRouter);
 app.use("/login", loginRouter);
+app.use("/usuario", usuariosRouter);
 
 app.listen(PORT, () => console.log(`servidor corriendo en puerto: ${PORT}`));

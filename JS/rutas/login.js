@@ -7,14 +7,15 @@ const usuarios = require("../servicios/usuarios");
 //POST login
 router.post("/", async function (req, res, next) {
   const { email, contrasena } = req.query;
-  const usuario = await usuarios.getSingle(email);
+  const usuario = await usuarios.get_user(email);
   console.log(usuario, contrasena);
 
   if (contrasena !== usuario.contrasena) {
     res.status(403).json("invalid login");
   } else {
     //token part
-    const token = jwt.sign({ email }, process.env.MY_SECRET, {
+    delete usuario.contrasena;
+    const token = jwt.sign(usuario, process.env.MY_SECRET, {
       expiresIn: "1h",
     });
     res.cookie("token", token, {
