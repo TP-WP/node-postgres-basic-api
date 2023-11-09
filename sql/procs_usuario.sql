@@ -14,3 +14,8 @@ BEGIN
     );
 END;
 $$;
+
+CREATE OR REPLACE FUNCTION get_user_pass(IN Email VARCHAR(50), OUT _result VARCHAR(255))
+RETURNS VARCHAR(255) AS $$
+    SELECT contrasena FROM usuario WHERE email=Email    
+$$ LANGUAGE sql;
