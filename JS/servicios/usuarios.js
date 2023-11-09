@@ -28,4 +28,8 @@ const validate_user = async (email, pass) => {
   });
 };
 
-module.exports = { creaUsuario, validate_user };
+const get_user = async(email) =>{
+  return email
+}
+
+module.exports = { creaUsuario, validate_user, get_user };

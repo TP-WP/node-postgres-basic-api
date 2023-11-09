@@ -26,6 +26,6 @@ app.get("/", async (req, res) => {
 //ruta usuarios
 app.use("/registro", registroRouter);
 app.use("/login", loginRouter);
-app.use("/usuario", usuariosRouter);
+app.use("/usuarios", usuariosRouter);
 
 app.listen(PORT, () => console.log(`servidor corriendo en puerto: ${PORT}`));
