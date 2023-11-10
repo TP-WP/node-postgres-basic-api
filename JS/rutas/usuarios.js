@@ -1,9 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const usuarios = require("../servicios/usuarios");
+const { JWTAuth } = require("../middleware/jwtauth");
 
 //get user data
-router.get("/", async function (req, res, next) {
+router.get("/",JWTAuth, async function (req, res, next) {
   try {
     const {email} = req.query
     result = await usuarios.get_user(email);
