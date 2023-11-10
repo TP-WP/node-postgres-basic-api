@@ -21,7 +21,6 @@ const testConnection =  () => {
       reject(error)
     }
   })
-  
 };
 testConnection().then((value)=>{console.log(value)});
 

@@ -9,7 +9,6 @@ router.post("/", async function (req, res, next) {
   try{
     const { email, contrasena } = req.query;
     const response = await usuarios.validate_user(email, contrasena);
-  
     if (response) {
       const token = jwt.sign({email}, process.env.MY_SECRET, {
         expiresIn: 60*60,
@@ -22,7 +21,6 @@ router.post("/", async function (req, res, next) {
     res.status(500).send(error);
     next(error);
   }
-  
 });
 
 module.exports = router;
