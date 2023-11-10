@@ -11,13 +11,21 @@ const pool = new Pool({
   connectionTimeoutMillis: 2000,
 });
 
-const testConnection = async () => {
-  client = await pool.connect();
-  client.release();
+const testConnection =  () => {
+  return new Promise(async (resolve, reject)=>{
+    try{
+      client = await pool.connect();
+      client.release();
+      resolve("conexion a la base de datos exitosa");
+    }catch(error){
+      reject(error)
+    }
+  })
+  
 };
-testConnection().then(console.log("conexion exitosa"));
+testConnection().then((value)=>{console.log(value)});
 
-pool.query = async (query) => {
+pool.query =  (query) => {
   return new Promise(async (resolve, reject) => {
     try {
       const client = await pool.connect();

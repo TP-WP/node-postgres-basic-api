@@ -1,10 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const usuarios = require("../servicios/usuarios");
-const { cookieJwtAuth } = require("../middleware/cookiejwtauth");
 
 //get user data
-router.get("/", cookieJwtAuth, async function (req, res, next) {
+router.get("/", async function (req, res, next) {
   try {
     const {email} = req.query
     result = await usuarios.get_user(email);

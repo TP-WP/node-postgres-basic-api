@@ -11,14 +11,10 @@ router.post("/", async function (req, res, next) {
     const response = await usuarios.validate_user(email, contrasena);
   
     if (response) {
-      //token part
       const token = jwt.sign({email}, process.env.MY_SECRET, {
         expiresIn: 60*60,
       });
-      res.cookie("token", token, {
-        httpOnly: true,
-      });
-      res.send("login correcto");
+      res.send(token);
     } else {
       res.status(403).json("invalid login");
     }
