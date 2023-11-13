@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors"); //para evitar problemas con la CORS policy
 const cookieParser = require("cookie-parser");
-var useragent = require('express-useragent');
+const useragent = require('express-useragent');
 //routes
 const usuariosRouter = require("./JS/rutas/usuarios");
 const loginRouter = require("./JS/rutas/login");

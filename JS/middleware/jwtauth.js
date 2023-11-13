@@ -14,7 +14,7 @@ const JWTAuth = (req,res, next)=>{
         req.user = user;
         next();
     } catch (e) {
-        if(source.isDesktop){
+        if(source.isDesktop && !source.isNative){
             res.clearCookie("token");
         }
         res.send("invalid token");

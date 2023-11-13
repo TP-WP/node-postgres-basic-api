@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const usuarios = require("../servicios/usuarios");
 const { JWTAuth } = require("../middleware/jwtauth");
+const { validateUserRegistration, userValidation } = require("../middleware/validation");
 
 //get user data
 router.get("/",JWTAuth, async function (req, res, next) {
@@ -15,7 +16,7 @@ router.get("/",JWTAuth, async function (req, res, next) {
   }
 });
 
-router.post("/", async function (req, res, next) {
+router.post("/", validateUserRegistration, userValidation,async function (req, res, next) {
   try {
     const {email, contrasena} = req.query
     result = await usuarios.creaUsuario(email, contrasena);
