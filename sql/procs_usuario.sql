@@ -15,6 +15,20 @@ BEGIN
 END;
 $$;
 
+CREATE OR REPLACE PROCEDURE store_image_path(
+    Image_path VARCHAR(255)
+)
+LANGUAGE plpgsql
+AS $$
+BEGIN
+    UPDATE usuario SET(
+        image_path
+    ) VALUES(
+        Image_path
+    );
+END;
+$$;
+
 CREATE OR REPLACE FUNCTION get_user_pass(IN Email VARCHAR(50), OUT _result VARCHAR(255))
 RETURNS VARCHAR(255) AS $$
     SELECT contrasena FROM usuario WHERE email=Email    

@@ -11,5 +11,6 @@ CREATE TABLE usuario
     id SERIAL,
     email VARCHAR(50) UNIQUE,
     contrasena VARCHAR(255),
+    image_path VARCHAR(255),
     PRIMARY KEY(id)
 )

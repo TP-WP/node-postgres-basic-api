@@ -32,4 +32,16 @@ const get_user = async(email) =>{
   return email
 }
 
-module.exports = { creaUsuario, validate_user, get_user };
+const store_image_path = async (path) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      sql = `CALL store_image_path ('${path}')`;
+      await pool.query(sql);
+      resolve("image path stored");
+    } catch (err) {
+      reject(err);
+    }
+  });
+};
+
+module.exports = { creaUsuario, validate_user, get_user, store_image_path };
