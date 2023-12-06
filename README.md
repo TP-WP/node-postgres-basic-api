@@ -1,32 +1,39 @@
 npm start para iniciar servidor de api  
 por defecto, acceder a localhost:3050 para acceder a api
 
-MySQL: para crear y configurar base de datos  
-mysql -u username -p userpass CREATE DATABASE testDB  
-mysql -u username -p userpass testDB < ./mysql/testDB.sql
+get /usuarios
+@email
+get single user:
+{email}
 
-configurar .env con credenciales para su base de datos  
-DB_USER = 'username' //cambiar por usuario de mysql  
-DB_HOST = 'localhost'  
-DB_PASSWORD = 'userpass' //cambiar por clave de usuario de mysql  
-DB_NAME = 'testDB'
+post /usuarios
+@email
+@password
+creates user
 
-Uso de la API:  
-/ - ruta por defecto - mensaje de bienvenida  
-/usuarios - unica ruta ademas de la por defecto  
-&ensp;-GET: sin parametros. Devuelve lista completa de usuarios sin ordenar sin paginacion  
-&ensp;-POST: crea un nuevo usuario. la id se actualiza automaticamente. Parametros:  
-&ensp;&ensp;-@nombre  
-&ensp;&ensp;-@edad  
-&ensp;&ensp;-@rut  
-&ensp;&ensp;-@telefono  
-&ensp;&ensp;-@direccion  
-&ensp;-PUT: actualiza un usuario determinado por su id. Parametros:  
-&ensp;&ensp;-@idUsuario  
-&ensp;&ensp;-@nombre  
-&ensp;&ensp;-@edad  
-&ensp;&ensp;-@rut  
-&ensp;&ensp;-@telefono  
-&ensp;&ensp;-@direccion  
-&ensp;-DELETE: elimina un usuario determinado por su id. Parametros:  
-&ensp;&ensp;-@idUsuario
+post /usuarios/upload-image
+@email
+@file
+uploads image to cloudinary
+
+post /usuarios/login
+@email
+@password
+@platform
+validates user login and returns token in a cookie when platform is web or in response data when mobile
+
+get /usuarios/logout
+deletes cookie when web or TODO insta expire token when mobile
+
+get /usuarios/all
+returns all users
+[
+    {
+        email,
+        password
+    }
+]
+
+get /usuarios/validate
+@token
+simple fetch to validate a token
