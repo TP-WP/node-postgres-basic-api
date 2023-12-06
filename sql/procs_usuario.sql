@@ -16,20 +16,25 @@ END;
 $$;
 
 CREATE OR REPLACE PROCEDURE store_image_path(
+    _param_email VARCHAR(50),
     Image_path VARCHAR(255)
 )
 LANGUAGE plpgsql
 AS $$
 BEGIN
-    UPDATE usuario SET(
-        image_path
-    ) VALUES(
-        Image_path
-    );
+    UPDATE usuario SET image_path = Image_path WHERE email=_param_email;
 END;
 $$;
 
-CREATE OR REPLACE FUNCTION get_user_pass(IN Email VARCHAR(50), OUT _result VARCHAR(255))
-RETURNS VARCHAR(255) AS $$
-    SELECT contrasena FROM usuario WHERE email=Email    
-$$ LANGUAGE sql;
+CREATE OR REPLACE FUNCTION get_user_pass(_param_email VARCHAR(50))
+  RETURNS VARCHAR(255)
+  LANGUAGE plpgsql AS
+$func$
+BEGIN
+   RETURN (SELECT contrasena FROM usuario WHERE email=_param_email);
+END
+$func$;
+
+CREATE OR REPLACE FUNCTION get_all_users() RETURNS setof usuario AS '
+    SELECT * FROM usuario;
+' LANGUAGE SQL;

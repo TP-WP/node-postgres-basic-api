@@ -1,10 +1,10 @@
 const {Router} = require("express");
 const jwt = require("jsonwebtoken");
 const usuarios = require("../servicios/usuarios");
-const {resizeFile} = require("../servicios/img-resize");
 const { JWTAuth } = require("../middleware/jwtauth");
 const { validateUserRegistration, userValidation } = require("../middleware/validation");
-const { upload } = require("../middleware/upload_img");
+const { upload2 } = require("../middleware/upload_img");
+//const {resizeFile} = require("../servicios/img-resize");
 
 const router = Router();
 require("dotenv").config();
@@ -21,10 +21,11 @@ router.get("/",JWTAuth, async function (req, res, next) {
   }
 });
 
+//create new user
 router.post("/", validateUserRegistration, userValidation, async function (req, res, next) {
   try {
-    const {email, contrasena} = req.query
-    result = await usuarios.creaUsuario(email, contrasena);
+    const {email, password} = req.body;
+    const result = await usuarios.creaUsuario(email, password);
     res.send(result);
   } catch (error) {
     if(error.code == 23505){
@@ -36,11 +37,16 @@ router.post("/", validateUserRegistration, userValidation, async function (req, 
   }
 });
 
-router.post("/upload-image", JWTAuth, upload, async function (req,res,next){
+router.post("/upload-image", JWTAuth, upload2.single("image"), async function (req,res,next){
+  //above "image" should be the same as comes in the request
   try{
     //havent been tested!!
-    const result = await usuarios.store_image_path(req.file.path);
-    resizeFile(req.file.path);
+    const {email} = req.body;
+    console.log("image request to see what am i dealing with: ",req)
+    const b64 = Buffer.from(req.file.buffer).toString("base64");
+    const dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    const result = await usuarios.upload_image(email, dataURI);
+    //resizeFile(req.file.path);
     if(result){
       res.json("image saved succesfully");
     }
@@ -53,16 +59,15 @@ router.post("/upload-image", JWTAuth, upload, async function (req,res,next){
 //POST login
 router.post("/login", async function (req, res, next) {
   try{
-    const { email, contrasena } = req.query;
-    source = req.useragent;
-    const response = await usuarios.validate_user(email, contrasena);
+    const { email, password, platform } = req.body;
+    const response = await usuarios.validate_user(email, password);
     if(response){
       const token = jwt.sign({email}, process.env.MY_SECRET, {
         //TODO this expire time should be thinked over a little
-        expiresIn: 60*60,
+        //expiresIn: 60*60,
       });
-      if (source.isDesktop) {
-        //TODO ackshually this sould check any kind of browser that supports http only cookies
+      if (platform=="web") {
+        //if app is running from a browser, send token as a cookie
         res.cookie("token", token, {
           httpOnly: true,
           })
@@ -89,5 +94,20 @@ router.get("/logout", JWTAuth, (req, res) => {
     .status(200)
     .json({ message: "Successfully logged out " });
 });
+
+router.get("/all", async (req,res)=>{
+  try{
+    const result = await usuarios.get_all_users();
+    res.send(result);
+  }catch(e){
+    res.status(500).send(e);
+    next(e);
+  }
+  return res
+})
+
+router.get("/validate", JWTAuth, async (req,res)=>{
+  res.send(true);
+})
 
 module.exports = router;

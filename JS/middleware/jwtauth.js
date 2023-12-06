@@ -1,10 +1,17 @@
 require("dotenv").config();
 const jwt = require("jsonwebtoken");
 
-const JWTAuth = (req,res, next)=>{
-    const source = req.useragent;
+const JWTAuth = (req, res, next)=>{
+    let platform;
+    if(req.method=="GET"){
+        platform = req.query.platform;
+    }else if(req.method == "POST"){
+        platform = req.body.platform;
+    }
     let token;
-    if( source.isDesktop){
+    console.log("cookies: ", req.cookies);
+    console.log("plataforma: ", platform)
+    if(platform=="web"){
         token = req.cookies.token;
     }else{
         token = req.query.token;
@@ -14,7 +21,7 @@ const JWTAuth = (req,res, next)=>{
         req.user = user;
         next();
     } catch (e) {
-        if(source.isDesktop && !source.isNative){
+        if(platform=="web"){
             res.clearCookie("token");
         }
         res.send("invalid token");

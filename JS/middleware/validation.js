@@ -8,7 +8,7 @@ const validateUserRegistration = [
 ]
 
 const userValidation = (req,res,next)=>{
-    const result = validationResult(req).array();
+    const result = validationResult(req.body).array();
     if(!result.length) return next();
 
     const error = result[0].msg;

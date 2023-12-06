@@ -23,4 +23,20 @@ const upload = multer({
   }
 }).single("image");
 
-module.exports = { upload };
+const storage2 = new multer.memoryStorage();
+const upload2 = multer({
+  storage2,
+  limits: {fileSize: 1000000},
+  fileFilter: (req, file, cb)=>{
+    const fileTypes = /jpeg|jpg|png|gif/;
+    const mimetype = fileTypes.test(file.mimetype);
+    const extname = fileTypes.test(file.originalname.split(".").filter(Boolean).slice(-1));
+    if(mimetype && extname){
+        return cb(null, true);
+    }
+    cb("archivo no valido");
+  }
+});
+
+
+module.exports = { upload, upload2 };

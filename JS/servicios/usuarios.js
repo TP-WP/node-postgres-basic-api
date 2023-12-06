@@ -1,9 +1,10 @@
+const cloudinary = require("../helper/img-upload");
 const { pool } = require("./pgsql");
 
-const creaUsuario = async (usuario) => {
+const creaUsuario = async (email, password) => {
   return new Promise(async (resolve, reject) => {
     try {
-      sql = `CALL ingresa_usuario ('${usuario.email}', '${usuario.contrasena}')`;
+      const sql = `CALL ingresa_usuario ('${email}', '${password}')`;
       await pool.query(sql);
       resolve("usuario creado");
     } catch (err) {
@@ -32,10 +33,25 @@ const get_user = async(email) =>{
   return email
 }
 
-const store_image_path = async (path) => {
+const get_all_users = async() =>{
+  return new Promise(async (resolve, reject)=>{
+    try{
+      sql = `SELECT get_all_users();`;
+      const result = await pool.query(sql);
+      resolve(result.rows.map((row)=>row.get_all_users));
+    }catch(e){
+      reject(e);
+    }
+  })
+}
+
+const upload_image = async ( email, file ) => {
   return new Promise(async (resolve, reject) => {
     try {
-      sql = `CALL store_image_path ('${path}')`;
+      const result = cloudinary.v2.uploader.upload(file,
+        { public_id: `${req.user}_profile`, width: 500, height: 500, crop: "fill" });
+      console.log("result clodinary: ",result);
+      const sql = `CALL store_image_path ('${email}','${result.url}')`;
       await pool.query(sql);
       resolve("image path stored");
     } catch (err) {
@@ -44,4 +60,4 @@ const store_image_path = async (path) => {
   });
 };
 
-module.exports = { creaUsuario, validate_user, get_user, store_image_path };
+module.exports = { creaUsuario, validate_user, get_user, upload_image, get_all_users };
