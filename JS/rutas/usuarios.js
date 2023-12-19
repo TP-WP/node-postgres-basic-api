@@ -3,8 +3,7 @@ const jwt = require("jsonwebtoken");
 const usuarios = require("../servicios/usuarios");
 const { JWTAuth } = require("../middleware/jwtauth");
 const { validateUserRegistration, userValidation } = require("../middleware/validation");
-const { upload2 } = require("../middleware/upload_img");
-//const {resizeFile} = require("../servicios/img-resize");
+const {  uploadFile } = require("../middleware/upload_img");
 
 const router = Router();
 require("dotenv").config();
@@ -37,19 +36,18 @@ router.post("/", validateUserRegistration, userValidation, async function (req, 
   }
 });
 
-router.post("/upload-image", JWTAuth, upload2.single("image"), async function (req,res,next){
-  //above "image" should be the same as comes in the request
+router.post("/upload-image", JWTAuth, uploadFile, async function (req,res,next){
   try{
-    //havent been tested!!
-    const {email} = req.body;
-    console.log("image request to see what am i dealing with: ",req)
-    const b64 = Buffer.from(req.file.buffer).toString("base64");
-    const dataURI = "data:" + req.file.mimetype + ";base64," + b64;
+    console.log("req.body: ", req.body)
+    console.log("req.file: ", req.file)
+    console.log("req.headers: ", req.headers)
+    /*
     const result = await usuarios.upload_image(email, dataURI);
-    //resizeFile(req.file.path);
     if(result){
       res.json("image saved succesfully");
     }
+    */
+   res.send("intentando")
   }catch(error){
     res.status(500).send(error);
     next(error);
@@ -107,6 +105,7 @@ router.get("/all", async (req,res)=>{
 })
 
 router.get("/validate", JWTAuth, async (req,res)=>{
+  res.setHeader('Access-Control-Allow-Credentials', true);
   res.send(true);
 })
 

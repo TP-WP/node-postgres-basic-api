@@ -1,42 +1,42 @@
 const multer = require("multer");
-const { v4: uuidv4} = require("uuid");
-const path = require("path");
 
-const storage = multer.diskStorage({
-  destination: path.join(__dirname,"../../uploads"), 
-  filename: (req, file, cb)=>{
-    cb(null, uuidv4() + file.originalname.split(".").filter(Boolean).slice(-1));
+const storage = multer.memoryStorage();
+
+const fileFilter = (req, file, cb)=>{
+  console.log("filefilter: ")
+  const fileTypes = /jpeg|jpg|png|gif/;
+  const mimetype = fileTypes.test(file.mimetype);
+  const extname = fileTypes.test(file.originalname.split(".").filter(Boolean).slice(-1));
+  if(mimetype && extname){
+      return cb(null, true);
+  }
+  cb("archivo no valido");
 }
-});
+
+function uploadFile(req, res, next) {
+  const upload = multer({
+    storage: storage,
+    limits: {fileSize: 1000000},
+    fileFilter
+  }).single('profile');
+
+  upload(req, res, function (err) {
+    if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        console.log('err: ', err)
+    } else if (err) {
+        // An unknown error occurred when uploading.
+        console.log('err: ', err)
+    }
+    // Everything went fine. 
+    next()
+  })
+}
 
 const upload = multer({
-  storage,
+  storage: storage,
   limits: {fileSize: 1000000},
-  fileFilter: (req, file, cb)=>{
-    const fileTypes = /jpeg|jpg|png|gif/;
-    const mimetype = fileTypes.test(file.mimetype);
-    const extname = fileTypes.test(file.originalname.split(".").filter(Boolean).slice(-1));
-    if(mimetype && extname){
-        return cb(null, true);
-    }
-    cb("archivo no valido");
-  }
-}).single("image");
+  fileFilter
+}).single('profile');
 
-const storage2 = new multer.memoryStorage();
-const upload2 = multer({
-  storage2,
-  limits: {fileSize: 1000000},
-  fileFilter: (req, file, cb)=>{
-    const fileTypes = /jpeg|jpg|png|gif/;
-    const mimetype = fileTypes.test(file.mimetype);
-    const extname = fileTypes.test(file.originalname.split(".").filter(Boolean).slice(-1));
-    if(mimetype && extname){
-        return cb(null, true);
-    }
-    cb("archivo no valido");
-  }
-});
-
-
-module.exports = { upload, upload2 };
+module.exports = { uploadFile };
