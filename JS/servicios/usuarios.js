@@ -1,4 +1,3 @@
-const cloudinary = require("../helper/img-upload");
 const { pool } = require("./pgsql");
 
 const creaUsuario = async (email, password) => {

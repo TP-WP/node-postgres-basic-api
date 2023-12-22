@@ -15,14 +15,12 @@ app.use(cors({
   origin: process.env.MY_IP.split(","),
   credentials: true
 }));
-//app.use(express.json());
-/*
+app.use(express.json());
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
-*/
 app.use(cookieParser());
 
 //rutas
