@@ -12,10 +12,10 @@ const app = express();
 
 //only allowing my ip for this to work
 app.use(cors({
-  origin: process.env.MY_IP,
+  origin: process.env.MY_IP.split(","),
   credentials: true
 }));
-app.use(express.json());
+//app.use(express.json());
 /*
 app.use(
   express.urlencoded({

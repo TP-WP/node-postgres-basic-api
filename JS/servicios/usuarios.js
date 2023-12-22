@@ -45,17 +45,12 @@ const get_all_users = async() =>{
   })
 }
 
-const upload_image = async ( email, file ) => {
+const upload_image = async ( email, path ) => {
   return new Promise(async (resolve, reject) => {
     try {
-      /*
-      const result = cloudinary.v2.uploader.upload(file,
-        { public_id: `${req.user}_profile`, width: 500, height: 500, crop: "fill" });
-        
-      console.log("result clodinary: ",result);
-      const sql = `CALL store_image_path ('${email}','${result.url}')`;
+      const sql = `CALL store_image_path ('${email}','${path}')`;
       await pool.query(sql);
-      */
+      
       resolve("image path stored");
     } catch (err) {
       reject(err);

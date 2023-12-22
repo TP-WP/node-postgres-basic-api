@@ -1,13 +1,26 @@
 const multer = require("multer");
+const {v2: cloudinary} = require('cloudinary');
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
-const storage = multer.memoryStorage();
+require("dotenv").config();
+
+cloudinary.config({ 
+  cloud_name: process.env.cloud_name, 
+  api_key: process.env.api_key, 
+  api_secret: process.env.api_secret
+});
+
+const cloudinaryStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: "DEV"
+  }
+});
 
 const fileFilter = (req, file, cb)=>{
-  console.log("filefilter: ")
   const fileTypes = /jpeg|jpg|png|gif/;
   const mimetype = fileTypes.test(file.mimetype);
-  const extname = fileTypes.test(file.originalname.split(".").filter(Boolean).slice(-1));
-  if(mimetype && extname){
+  if(mimetype){
       return cb(null, true);
   }
   cb("archivo no valido");
@@ -15,8 +28,7 @@ const fileFilter = (req, file, cb)=>{
 
 function uploadFile(req, res, next) {
   const upload = multer({
-    storage: storage,
-    limits: {fileSize: 1000000},
+    storage: cloudinaryStorage,
     fileFilter
   }).single('profile');
 
@@ -32,11 +44,5 @@ function uploadFile(req, res, next) {
     next()
   })
 }
-
-const upload = multer({
-  storage: storage,
-  limits: {fileSize: 1000000},
-  fileFilter
-}).single('profile');
 
 module.exports = { uploadFile };

@@ -35,19 +35,15 @@ router.post("/", validateUserRegistration, userValidation, async function (req, 
     next(error);
   }
 });
-
+//post image
 router.post("/upload-image", JWTAuth, uploadFile, async function (req,res,next){
   try{
-    console.log("req.body: ", req.body)
-    console.log("req.file: ", req.file)
-    console.log("req.headers: ", req.headers)
-    /*
-    const result = await usuarios.upload_image(email, dataURI);
+    const { email } = req.user;
+    const path = req.file.path
+    const result = await usuarios.upload_image(email, path);
     if(result){
       res.json("image saved succesfully");
     }
-    */
-   res.send("intentando")
   }catch(error){
     res.status(500).send(error);
     next(error);
