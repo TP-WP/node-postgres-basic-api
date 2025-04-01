@@ -3,24 +3,20 @@ const express = require("express");
 const cors = require("cors"); //para evitar problemas con la CORS policy
 const cookieParser = require("cookie-parser");
 require("dotenv").config();
+
+const PORT = process.env.PORT || 3050;
+const app = express();
+
 //routes
 const usuariosRouter = require("./JS/rutas/usuarios");
 
-const PORT = process.env.PORT || 3050;
-
-const app = express();
-
 //only allowing my ip for this to work
 app.use(cors({
-  origin: process.env.MY_IP.split(","),
+  origin: process.env.MY_IP,
   credentials: true
 }));
 app.use(express.json());
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
+app.use(express.urlencoded({extended: true}));
 app.use(cookieParser());
 
 //rutas
