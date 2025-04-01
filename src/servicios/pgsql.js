@@ -8,13 +8,13 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
   max: 4,
   idleTimeoutMillis: 30000,
-  connectionTimeoutMillis: 2000,
+  connectionTimeoutMillis: 5000,
 });
 
 const testConnection =  () => {
   return new Promise(async (resolve, reject)=>{
     try{
-      client = await pool.connect();
+      const client = await pool.connect();
       client.release();
       resolve("conexion a la base de datos exitosa");
     }catch(error){
